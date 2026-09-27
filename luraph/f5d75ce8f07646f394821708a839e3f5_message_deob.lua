@@ -1,0 +1,1034 @@
+local function fn()
+	if not game:IsLoaded() then
+		game.Loaded:Wait()
+	end
+
+	local function fn2()
+		local TweenService = game:GetService("TweenService")
+		local n = 0
+		local str = "Noctelis/key.txt"
+
+		local tbl = {
+			interfaceName = "Night Hub",
+			titleText = "Night Hub",
+			hintText = "Enter your key to continue",
+			keyInputLabelText = "License key",
+			submitButtonText = "Submit Key",
+			getKeyButtonText = "GET KEY",
+			getKeyUrl = "https://103.69.96.168/key?ver=NightHub",
+			loadingStageMessages = {
+				"Authorising session",
+				"Fetching components",
+				"Building interface",
+				"Restoring settings",
+				"Finishing up",
+			},
+			maximumKeyLength = 44,
+			savedKeyFilePath = "NightHub/key.txt",
+			savedKeyCheckMessage = "Checking saved key",
+			savedKeyCheckTimeoutSeconds = 15,
+			validateLicenseKey = nil,
+			onLicenseKeyAccepted = nil,
+		}
+
+		local function fn3(arg, arg2, arg3)
+			return Color3.fromRGB(arg, arg2, arg3)
+		end
+
+		local v = fn3(24, 24, 26)
+		local v2 = fn3(18, 18, 20)
+		local v3 = fn3(237, 237, 235)
+		local v4 = fn3(150, 150, 146)
+		local v5 = fn3(143, 143, 139)
+		local v6 = fn3(111, 140, 208)
+		local v7 = fn3(214, 90, 74)
+		local v8 = fn3(122, 190, 128)
+		local v9 = fn3(128, 156, 220)
+		local v10 = fn3(92, 117, 175)
+		local v11 = fn3(58, 122, 68)
+		local v12 = v6
+		local v13 = fn3(255, 255, 255)
+		local v14 = fn3(240, 246, 240)
+		local n2 = 444
+		local n3 = 354
+		local n4 = 320
+		local n5 = 88
+		local n6 = 4
+		local tweenInfo = TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+		local regular = Enum.FontWeight.Regular
+		local bold = Enum.FontWeight.Bold
+
+		local function fn4(arg)
+			return Font.new("rbxasset://fonts/families/RobotoMono.json", arg or regular)
+		end
+
+		local function fn5(arg, arg2, parent)
+			local instance = Instance.new(arg)
+
+			for k, v15 in pairs(arg2) do
+				instance[k] = v15
+			end
+
+			instance.Parent = parent
+			return instance
+		end
+
+		local function fn6(arg, arg2, arg3)
+			return fn5("UICorner", { Name = arg2, CornerRadius = UDim.new(0, arg) }, arg3)
+		end
+
+		local function fn7(arg, arg2)
+			return fn5("UIStroke", {
+				Name = arg,
+				Color = fn3(255, 255, 255),
+				Transparency = 0.65,
+				Thickness = 1,
+				ApplyStrokeMode = Enum.ApplyStrokeMode.Border,
+				LineJoinMode = Enum.LineJoinMode.Round,
+			}, arg2)
+		end
+
+		local function fn8(arg, arg2, arg3, arg4, arg5, arg6, arg7)
+			return fn5("TextLabel", {
+				Name = arg,
+				Size = UDim2.new(0, arg6, 0, math.floor(arg3 * 1.2 + 0.5)),
+				Position = arg5,
+				BackgroundTransparency = 1,
+				Text = arg2,
+				TextColor3 = arg4,
+				TextSize = arg3,
+				FontFace = fn4(),
+				TextXAlignment = Enum.TextXAlignment.Left,
+			}, arg7)
+		end
+
+		local function fn9()
+			local hui = gethui and gethui() or game:GetService("CoreGui")
+			if syn and syn.protect_gui then
+				return hui, syn.protect_gui
+			end
+			return hui, protect_gui
+		end
+
+		local function fn10(arg)
+			return (arg:gsub("^%s+", ""):gsub("%s+$", ""))
+		end
+
+		local function fn11(arg)
+			local v15 = setclipboard or toclipboard
+			if type(v15) ~= "function" then
+				return false
+			end
+			return pcall(v15, arg)
+		end
+
+		local function fn12(arg)
+			local match = tbl.savedKeyFilePath:match("^(.*)[/]")
+
+			if match and isfolder and makefolder and not isfolder(match) then
+				pcall(makefolder, match)
+			end
+
+			pcall(writefile, tbl.savedKeyFilePath, arg)
+		end
+
+		tbl.deleteSavedLicenseKey = function()
+			if isfile and isfile(tbl.savedKeyFilePath) then
+				pcall(delfile, tbl.savedKeyFilePath)
+			end
+
+			if isfile and isfile("Noctelis/key.txt") then
+				pcall(delfile, "Noctelis/key.txt")
+			end
+		end
+
+		local function fn13()
+			if not (isfile and readfile) then
+				return
+			end
+			local savedKeyFilePath = isfile(tbl.savedKeyFilePath) and tbl.savedKeyFilePath or isfile("Noctelis/key.txt") and "Noctelis/key.txt"
+			if not savedKeyFilePath then
+				return
+			end
+			local ok, result = pcall(readfile, savedKeyFilePath)
+			if not ok or type(result) ~= "string" then
+				return
+			end
+
+			if savedKeyFilePath == str then
+				fn12(result)
+			end
+
+			local v15 = fn10(result)
+			local flag = v15 ~= "" and utf8.len(v15)
+			if not flag or flag > tbl.maximumKeyLength then
+				return
+			end
+			return v15
+		end
+
+		tbl.destroyInterface = function()
+			n += 1
+			local v15 = fn9():FindFirstChild(tbl.interfaceName)
+
+			if v15 then
+				v15:Destroy()
+			end
+		end
+
+		tbl.showInterface = function(arg, arg2)
+			tbl.destroyInterface()
+			local v15 = n
+			local v16 = fn13()
+			local flag = arg ~= nil and type(arg) ~= "string"
+			local flag2 = type(arg) == "string" and fn10(arg) or nil
+
+			if flag2 == "" then
+				flag2 = nil
+			end
+
+			local flag3 = not flag and (flag2 or v16) or nil
+			local v17, v18 = fn9()
+
+			local ScreenGui = fn5("ScreenGui", {
+				Name = tbl.interfaceName,
+				DisplayOrder = 10,
+				IgnoreGuiInset = true,
+				ResetOnSpawn = false,
+				ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
+			}, v17)
+
+			if v18 then
+				pcall(v18, ScreenGui)
+			end
+
+			local Frame = fn5("Frame", {
+				Name = "Scrim",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundColor3 = fn3(0, 0, 0),
+				BackgroundTransparency = 1,
+				BorderSizePixel = 0,
+				Active = true,
+				ZIndex = 1,
+			}, ScreenGui)
+
+			local CanvasGroup = fn5("CanvasGroup", {
+				Name = "Root",
+				Size = UDim2.fromOffset(n2 + n6 * 4, n3 + n6 * 4),
+				Position = UDim2.new(0.5, 0, 0.5, 0),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				BackgroundTransparency = 1,
+				GroupTransparency = 1,
+				ZIndex = 2,
+			}, ScreenGui)
+
+			for i = 4, 1, -1 do
+				local n7 = i * 2
+
+				local Frame2 = fn5("Frame", {
+					Name = ("Aura%*"):format(i),
+					Size = UDim2.new(1, n7 * 2 - n6 * 4 - 4, 1, n7 * 2 - n6 * 4 - 4),
+					Position = UDim2.fromScale(0.5, 0.5),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundColor3 = v6,
+					BackgroundTransparency = 0.83,
+					BorderSizePixel = 0,
+				}, CanvasGroup)
+
+				fn6(12 + n7, "AuraCorner", Frame2)
+			end
+
+			local Frame2 = fn5("Frame", {
+				Name = "Panel",
+				Size = UDim2.new(1, -n6 * 4 - 4, 1, -n6 * 4 - 4),
+				Position = UDim2.fromScale(0.5, 0.5),
+				AnchorPoint = Vector2.new(0.5, 0.5),
+				BackgroundColor3 = v,
+				BorderSizePixel = 0,
+			}, CanvasGroup)
+
+			fn6(12, "PanelCorner", Frame2)
+			fn7("PanelStroke", Frame2)
+			local CanvasGroup2 = fn5("CanvasGroup", { Name = "Body", Size = UDim2.fromScale(1, 1), BackgroundTransparency = 1 }, Frame2)
+			fn8("Title", tbl.titleText, 20, v3, UDim2.new(0, 22, 0, 22), 340, CanvasGroup2).FontFace = fn4(bold)
+			fn8("Hint", tbl.hintText, 13, v4, UDim2.new(0, 22, 0, 52), 340, CanvasGroup2)
+
+			local TextButton = fn5("TextButton", {
+				Name = "Close",
+				Size = UDim2.new(0, 32, 0, 32),
+				Position = UDim2.new(1, -12, 0, 18),
+				AnchorPoint = Vector2.new(1, 0),
+				BackgroundTransparency = 1,
+				Text = "",
+				FontFace = fn4(),
+				AutoButtonColor = false,
+			}, CanvasGroup2)
+
+			local tbl2 = {}
+
+			for i, v19 in ipairs({ 45, -45 }) do
+				tbl2[i] = fn5("Frame", {
+					Name = ("Bar%*"):format(i),
+					Size = UDim2.new(0, 13, 0, 1),
+					Position = UDim2.fromScale(0.5, 0.5),
+					AnchorPoint = Vector2.new(0.5, 0.5),
+					BackgroundColor3 = v5,
+					Rotation = v19,
+					BorderSizePixel = 0,
+				}, TextButton)
+			end
+
+			fn5("Frame", {
+				Name = "Divider",
+				Size = UDim2.new(1, -44, 0, 1),
+				Position = UDim2.new(0, 22, 0, 88),
+				BackgroundColor3 = fn3(255, 255, 255),
+				BackgroundTransparency = 0.86,
+				BorderSizePixel = 0,
+			}, CanvasGroup2)
+
+			fn8("Label", tbl.keyInputLabelText, 13, v4, UDim2.new(0, 22, 0, 108), 220, CanvasGroup2)
+
+			local Frame3 = fn5("Frame", {
+				Name = "Field",
+				Size = UDim2.new(1, -44, 0, 50),
+				Position = UDim2.new(0, 22, 0, 130),
+				BackgroundColor3 = v2,
+				BorderSizePixel = 0,
+			}, CanvasGroup2)
+
+			fn6(8, "FieldCorner", Frame3)
+			local FieldStroke = fn7("FieldStroke", Frame3)
+
+			local TextBox = fn5("TextBox", {
+				Name = "Box",
+				Size = UDim2.new(1, -32, 1, 0),
+				Position = UDim2.new(0, 16, 0, 0),
+				BackgroundTransparency = 1,
+				Text = "",
+				PlaceholderText = "Paste your key here",
+				PlaceholderColor3 = v5,
+				TextColor3 = v3,
+				TextSize = 16,
+				FontFace = fn4(),
+				TextXAlignment = Enum.TextXAlignment.Left,
+				ClearTextOnFocus = false,
+				MultiLine = false,
+			}, Frame3)
+
+			local Err = fn8("Err", "", 13, v7, UDim2.new(0, 22, 0, 192), 400, CanvasGroup2)
+
+			local TextButton2 = fn5("TextButton", {
+				Name = "Submit",
+				Size = UDim2.new(1, -44, 0, 50),
+				Position = UDim2.new(0, 22, 0, 218),
+				BackgroundColor3 = v12,
+				Text = "",
+				FontFace = fn4(),
+				AutoButtonColor = false,
+				BorderSizePixel = 0,
+			}, CanvasGroup2)
+
+			fn6(8, "SubmitCorner", TextButton2)
+
+			local TextLabel = fn5("TextLabel", {
+				Name = "SubmitTitle",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundTransparency = 1,
+				Text = tbl.submitButtonText,
+				TextColor3 = v13,
+				TextSize = 18,
+				FontFace = fn4(),
+			}, TextButton2)
+
+			local TextButton3 = fn5("TextButton", {
+				Name = "GetKey",
+				Size = UDim2.new(1, -44, 0, 50),
+				Position = UDim2.new(0, 22, 0, 278),
+				BackgroundColor3 = v12,
+				Text = "",
+				FontFace = fn4(),
+				AutoButtonColor = false,
+				BorderSizePixel = 0,
+			}, CanvasGroup2)
+
+			fn6(8, "GetKeyCorner", TextButton3)
+
+			fn5("TextLabel", {
+				Name = "GetKeyTitle",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundTransparency = 1,
+				Text = tbl.getKeyButtonText,
+				TextColor3 = v13,
+				TextSize = 18,
+				FontFace = fn4(),
+			}, TextButton3)
+
+			local CanvasGroup3 = fn5("CanvasGroup", {
+				Name = "Load",
+				Size = UDim2.fromScale(1, 1),
+				BackgroundTransparency = 1,
+				GroupTransparency = 1,
+				Visible = false,
+			}, Frame2)
+
+			local Step = fn8("Step", "", 14, v3, UDim2.new(0, 22, 0, 28), 190, CanvasGroup3)
+			local Pct = fn8("Pct", "0%", 13, v4, UDim2.new(1, -22, 0, 29), 60, CanvasGroup3)
+			Pct.AnchorPoint = Vector2.new(1, 0)
+			Pct.TextXAlignment = Enum.TextXAlignment.Right
+
+			local Frame4 = fn5("Frame", {
+				Name = "Track",
+				Size = UDim2.new(1, -44, 0, 2),
+				Position = UDim2.new(0, 22, 0, 60),
+				BackgroundColor3 = fn3(255, 255, 255),
+				BackgroundTransparency = 0.88,
+				BorderSizePixel = 0,
+			}, CanvasGroup3)
+
+			local Frame5 = fn5("Frame", { Name = "Fill", Size = UDim2.fromScale(0, 1), BackgroundColor3 = v6, BorderSizePixel = 0 }, Frame4)
+			local tweenInfo2 = TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+			local tweenInfo3 = TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+			local tweenInfo4 = TweenInfo.new(0.3, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+
+			if flag3 then
+				CanvasGroup.Size = UDim2.fromOffset(n4 + n6 * 4, n5 + n6 * 4)
+				CanvasGroup2.Visible = false
+				CanvasGroup2.GroupTransparency = 1
+				CanvasGroup3.Visible = true
+				CanvasGroup3.GroupTransparency = 0
+			end
+
+			TweenService:Create(Frame, tweenInfo, { BackgroundTransparency = 0.45 }):Play()
+			TweenService:Create(CanvasGroup, tweenInfo2, { GroupTransparency = 0 }):Play()
+
+			local function fn14(arg3, arg4)
+				TweenService:Create(arg3, tweenInfo, arg4):Play()
+			end
+
+			local flag4 = nil
+			local flag5 = nil
+			local text = nil
+
+			local function fn15()
+				return not flag5 and v15 == n and ScreenGui.Parent ~= nil
+			end
+
+			local function fn16()
+				if not fn15() then
+					return
+				end
+				flag5 = true
+				n += 1
+
+				if not tbl.accepted and type(tbl.onInterfaceClosed) == "function" then
+					task.spawn(tbl.onInterfaceClosed)
+				end
+
+				TweenService:Create(Frame, tweenInfo3, { BackgroundTransparency = 1 }):Play()
+				TweenService:Create(CanvasGroup, tweenInfo3, { GroupTransparency = 1 }):Play()
+				task.delay(0.12, ScreenGui.Destroy, ScreenGui)
+			end
+
+			local function fn17(arg3, arg4)
+				fn14(FieldStroke, { Color = arg3, Transparency = arg4, Thickness = arg4 < 0.3 and 2 or 1 })
+			end
+
+			local function fn18(text2)
+				if not fn15() then
+					return
+				end
+				local v19 = Err
+				local v20 = v7
+				local text3 = TextBox.Text
+				Err.Text = text2
+				v19.TextColor3 = v20
+				text = text3
+				fn17(v7, 0)
+			end
+
+			local function fn19()
+				if Err.Text == "" or TextBox.Text == text then
+					return
+				end
+				Err.Text = ""
+				if TextBox:IsFocused() then
+					return fn17(v6, 0)
+				end
+				fn17(fn3(255, 255, 255), 0.65)
+			end
+
+			local function fn20(text2)
+				Step.TextTransparency = 1
+				Step.Text = text2
+				TweenService:Create(Step, tweenInfo2, { TextTransparency = 0 }):Play()
+			end
+
+			local function fn21(arg3, arg4, arg5)
+				local now = os.clock()
+
+				while true do
+					if not fn15() then
+						return
+					else
+						local n7 = math.min((os.clock() - now) / arg5, 1)
+						local n8 = arg3 + (arg4 - arg3) * (1 - (1 - n7) ^ 2)
+						Frame5.Size = UDim2.fromScale(n8, 1)
+						Pct.Text = math.floor(n8 * 100) .. "%"
+						if n7 >= 1 then
+							break
+						end
+						task.wait()
+					end
+				end
+			end
+
+			local function fn22(arg3)
+				local n7 = #tbl.loadingStageMessages
+				local n8 = 1 - arg3
+
+				for i, loadingStageMessage in ipairs(tbl.loadingStageMessages) do
+					if not fn15() then
+						return
+					end
+					fn20(loadingStageMessage)
+					fn21(arg3 + n8 * (i - 1) / n7, arg3 + n8 * i / n7, 0.55)
+				end
+			end
+
+			local function fn23(arg3, arg4)
+				tbl.accepted = true
+				task.wait(0.4)
+				if not fn15() then
+					return
+				end
+				fn16()
+				local v19 = n
+				task.wait(0.16)
+
+				if v19 == n and tbl.onLicenseKeyAccepted then
+					task.spawn(tbl.onLicenseKeyAccepted, arg3, arg4)
+				end
+			end
+
+			local function fn24()
+				CanvasGroup3.Visible = true
+				TweenService:Create(CanvasGroup2, tweenInfo3, { GroupTransparency = 1 }):Play()
+				TweenService:Create(CanvasGroup, tweenInfo4, { Size = UDim2.fromOffset(n4 + n6 * 4, n5 + n6 * 4) }):Play()
+				task.wait(0.13)
+				if not fn15() then
+					return
+				end
+				CanvasGroup2.Visible = false
+				task.wait(0.17)
+				if not fn15() then
+					return
+				end
+				TweenService:Create(CanvasGroup3, tweenInfo2, { GroupTransparency = 0 }):Play()
+			end
+
+			local function fn25(arg3, arg4, arg5)
+				if not fn15() then
+					return
+				end
+
+				if type(arg4) == "table" and arg4.shouldForgetSavedKey == true and fn13() == arg5 then
+					tbl.deleteSavedLicenseKey()
+				end
+
+				CanvasGroup2.Visible = true
+				TweenService:Create(CanvasGroup3, tweenInfo3, { GroupTransparency = 1 }):Play()
+				TweenService:Create(CanvasGroup, tweenInfo4, { Size = UDim2.fromOffset(n2 + n6 * 4, n3 + n6 * 4) }):Play()
+				task.wait(0.14)
+				if not fn15() then
+					return
+				end
+				CanvasGroup3.Visible = false
+				TweenService:Create(CanvasGroup2, tweenInfo2, { GroupTransparency = 0 }):Play()
+				fn18(arg3)
+			end
+
+			local function fn26(arg3, arg4)
+				if type(arg3) == "table" and type(arg3.message) == "string" and arg3.message ~= "" then
+					return arg3.message
+				end
+				return arg4
+			end
+
+			local function fn27(arg3)
+				local flag6 = false
+				local v19 = nil
+				local v20 = nil
+				local v21 = nil
+
+				local thread = task.spawn(function()
+					local ok, result, result2 = pcall(tbl.validateLicenseKey, arg3)
+					v19 = ok
+					v20 = result
+					v21 = result2
+					flag6 = true
+				end)
+
+				local now = os.clock()
+				local n7 = math.clamp(tonumber(tbl.savedKeyCheckTimeoutSeconds) or 15, 1, 60)
+
+				while not flag6 and fn15() and os.clock() - now < n7 do
+					task.wait()
+				end
+
+				if not flag6 then
+					pcall(task.cancel, thread)
+					return false, false, { message = "Key check timed out, try again", shouldForgetSavedKey = false }
+				end
+				return v19, v20 == true, v21
+			end
+
+			local function fn28()
+				if flag4 or not fn15() then
+					return
+				end
+				local v19 = fn10(TextBox.Text)
+				if v19 == "" then
+					return fn18("Enter your key first")
+				end
+
+				if type(tbl.validateLicenseKey) ~= "function" then
+					return fn18("No verifier attached")
+				end
+				local v20 = TextLabel
+				flag4 = true
+				v20.Text = "Checking..."
+				fn14(TextButton2, { BackgroundColor3 = v10 })
+				local v21, v22, v23 = fn27(v19)
+				if not fn15() then
+					return
+				end
+				flag4 = false
+
+				if not v21 then
+					TextLabel.Text = tbl.submitButtonText
+					fn14(TextButton2, { BackgroundColor3 = v12 })
+					return fn18(fn26(v23, "Check failed, try again"))
+				end
+
+				if not v22 then
+					TextLabel.Text = tbl.submitButtonText
+					fn14(TextButton2, { BackgroundColor3 = v12 })
+
+					if type(v23) == "table" and v23.shouldForgetSavedKey == true and fn13() == v19 then
+						tbl.deleteSavedLicenseKey()
+					end
+
+					return fn18(fn26(v23, "Key not valid, check it and retry"))
+				end
+
+				local v24 = TextLabel
+				flag4 = true
+				v24.Text = "Verified"
+				TextBox:ReleaseFocus()
+				fn14(TextButton2, { BackgroundColor3 = v11 })
+				fn14(TextLabel, { TextColor3 = v14 })
+				fn17(v8, 0)
+				fn12(v19)
+				task.wait(0.35)
+				if not fn15() then
+					return
+				end
+				fn24()
+				fn22(0)
+				fn23(v19, v23)
+			end
+
+			local function fn29(arg3)
+				if type(tbl.validateLicenseKey) ~= "function" then
+					return fn25("No verifier attached")
+				end
+				local n7 = #tbl.loadingStageMessages + 1
+				fn20(flag2 and "Checking configured key" or tbl.savedKeyCheckMessage)
+				fn21(0, 1 / n7, 0.5)
+				if not fn15() then
+					return
+				end
+				local v19, v20, v21 = fn27(arg3)
+				if not fn15() then
+					return
+				end
+
+				if not v19 then
+					return fn25(fn26(v21, flag2 and "Configured key check failed" or "Saved key check failed"))
+				end
+
+				if not v20 then
+					return fn25(fn26(v21, flag2 and "Configured key not valid" or "Saved key no longer valid"), v21, arg3)
+				end
+
+				if flag2 then
+					if type(v21) ~= "table" or v21.valid ~= true then
+						return fn25("Configured key is not valid")
+					end
+					fn12(arg3)
+				end
+
+				fn22(1 / n7)
+				fn23(arg3, v21)
+			end
+
+			TextBox:GetPropertyChangedSignal("Text"):Connect(function()
+				local v19 = utf8.len(TextBox.Text)
+				if v19 and v19 > tbl.maximumKeyLength then
+					TextBox.Text = TextBox.Text:sub(1, utf8.offset(TextBox.Text, tbl.maximumKeyLength + 1) - 1)
+					return
+				end
+				fn19()
+			end)
+
+			TextBox.Focused:Connect(function()
+				if Err.Text == "" then
+					fn17(v6, 0)
+				end
+			end)
+
+			TextBox.FocusLost:Connect(function(enterPressed)
+				if Err.Text == "" then
+					fn17(fn3(255, 255, 255), 0.65)
+				end
+
+				if enterPressed then
+					fn28()
+				end
+			end)
+
+			TextButton2.MouseEnter:Connect(function()
+				if not flag4 then
+					fn14(TextButton2, { BackgroundColor3 = v9 })
+				end
+			end)
+
+			TextButton2.MouseLeave:Connect(function()
+				if not flag4 then
+					fn14(TextButton2, { BackgroundColor3 = v12 })
+				end
+			end)
+
+			TextButton2.MouseButton1Down:Connect(function()
+				if not flag4 then
+					fn14(TextButton2, { BackgroundColor3 = v10 })
+				end
+			end)
+
+			TextButton2.MouseButton1Click:Connect(fn28)
+
+			TextButton3.MouseEnter:Connect(function()
+				fn14(TextButton3, { BackgroundColor3 = v9 })
+			end)
+
+			TextButton3.MouseLeave:Connect(function()
+				fn14(TextButton3, { BackgroundColor3 = v12 })
+			end)
+
+			TextButton3.MouseButton1Down:Connect(function()
+				fn14(TextButton3, { BackgroundColor3 = v10 })
+			end)
+
+			TextButton3.MouseButton1Click:Connect(function()
+				local v19 = fn11(tbl.getKeyUrl)
+				Err.Text = v19 and "Get Key link copied" or tbl.getKeyUrl
+				Err.TextColor3 = v19 and v8 or v4
+				text = TextBox.Text
+				fn14(TextButton3, { BackgroundColor3 = v9 })
+			end)
+
+			local text2 = "Click the cross again to close"
+			local flag6 = false
+			local flag7 = false
+
+			local function fn30()
+				local v19 = flag7 and v7 or flag6 and v3 or v5
+
+				for _, v20 in ipairs(tbl2) do
+					fn14(v20, { BackgroundColor3 = v19 })
+				end
+			end
+
+			TextButton.MouseEnter:Connect(function()
+				flag6 = true
+				fn30()
+			end)
+
+			TextButton.MouseLeave:Connect(function()
+				flag6 = false
+				fn30()
+			end)
+
+			TextButton.MouseButton1Click:Connect(function()
+				if flag7 then
+					return fn16()
+				end
+				flag7 = true
+				local v19 = Err
+				local v20 = v4
+				local text3 = TextBox.Text
+				Err.Text = text2
+				v19.TextColor3 = v20
+				text = text3
+				fn30()
+
+				task.delay(10, function()
+					if flag5 then
+						return
+					end
+					flag7 = false
+
+					if Err.Text == text2 then
+						Err.Text = ""
+					end
+
+					fn30()
+				end)
+			end)
+
+			if flag then
+				fn18("Configured key must be a string")
+			elseif flag3 then
+				task.spawn(fn29, flag3)
+			elseif type(arg2) == "string" and arg2 ~= "" then
+				fn18(arg2)
+			end
+
+			return ScreenGui, TextBox
+		end
+
+		return tbl
+	end
+
+	local HttpService = game:GetService("HttpService")
+	local genv = type(getgenv) == "function" and getgenv() or _G
+	local v = request or http_request
+	local request_
+
+	if v then
+		request_ = v
+	else
+		request_ = syn and syn.request
+	end
+
+	local hash = crypt and crypt.hash
+	local hmac = crypt and crypt.hmac
+	local str = "https://103.69.96.168"
+	local v2 = fn2()
+
+	local function fn3(arg, arg2, arg3)
+		return false, { valid = false, code = arg, message = arg2, shouldForgetSavedKey = arg3 == true }
+	end
+
+	local function fn4(arg, arg2)
+		return type(arg) == "string" and #arg == arg2 and not arg:find("[^a-f0-9]")
+	end
+
+	local function fn5(arg)
+		return type(arg) == "number" and arg == arg and arg > 0 and arg < math.huge and arg % 1 == 0
+	end
+
+	local function fn6(arg, arg2)
+		if type(arg) ~= "table" then
+			return nil
+		end
+		local str2 = arg2:lower()
+
+		for k, v3 in pairs(arg) do
+			if type(k) == "string" and k:lower() == str2 and type(v3) == "string" then
+				return v3
+			end
+		end
+	end
+
+	local function fn7(arg, arg2)
+		local ok, result = pcall(request_, {
+			Url = str .. "/auth",
+			Method = "POST",
+			Headers = { ["Content-Type"] = "application/json", Accept = "application/json, text/plain" },
+			Body = HttpService:JSONEncode(arg),
+			Timeout = 15,
+		})
+
+		if not ok or type(result) ~= "table" then
+			return nil, "Cannot reach the license server"
+		end
+		local flag = type(result.Body) ~= "string" or #result.Body < 1
+
+		if not flag then
+			flag = #result.Body > (arg2 or 8192)
+		end
+
+		if flag then
+			return nil, "Invalid response from the license server"
+		end
+		return result
+	end
+
+	local function validateLicenseKey(arg)
+		local flag = type(arg) ~= "string"
+
+		if not flag then
+			flag = not (#arg == 32 and arg:match("^[A-Za-z0-9]+$") or #arg == 44 and arg:match("^NightHubPro%-[A-Za-z0-9]+$") or #arg == 21 and arg:match("^NightHub_[A-Za-z0-9]+$"))
+		end
+
+		if flag then
+			return fn3("INVALID_KEY_FORMAT", "Enter a valid Night Hub key")
+		end
+
+		if type(request_) ~= "function" then
+			return fn3("HTTP_UNAVAILABLE", "HTTP request is unavailable")
+		end
+
+		if type(gethwid) ~= "function" then
+			return fn3("HWID_UNAVAILABLE", "Cannot read this device's hardware identifier")
+		end
+
+		if type(hash) ~= "function" or type(hmac) ~= "function" then
+			return fn3("CRYPTO_UNAVAILABLE", "SHA-256 or HMAC is unavailable")
+		end
+		local ok, result = pcall(gethwid)
+		if not ok or type(result) ~= "string" or #result < 1 or #result > 256 or result:find("%c") then
+			return fn3("HWID_UNAVAILABLE", "Cannot read this device's hardware identifier")
+		end
+		local str2 = HttpService:GenerateGUID(false):gsub("%-", ""):lower()
+		local v3, v4 = fn7({ step = "init", licenseKey = arg, hardwareIdentifier = result, clientNonce = str2 }, 8192)
+		if not v3 then
+			return fn3("VALIDATION_UNAVAILABLE", v4)
+		end
+		local ok2, result2 = pcall(HttpService.JSONDecode, HttpService, v3.Body)
+		if not ok2 or type(result2) ~= "table" then
+			return fn3("INVALID_SERVER_RESPONSE", "Invalid response from the license server")
+		end
+
+		if result2.valid == false then
+			local message = type(result2.message) == "string" and result2.message or "Key rejected"
+			return fn3(type(result2.code) == "string" and result2.code or "KEY_REJECTED", message, result2.shouldForgetSavedKey)
+		end
+
+		if result2.valid ~= true or not fn4(result2.sessionIdentifier, 32) or not fn4(result2.accessToken, 64) or not fn4(result2.challenge, 64) or result2.clientNonce ~= str2 or not fn5(result2.sessionExpiresAt) or not fn5(result2.serverTime) or result2.sessionExpiresAt <= result2.serverTime or result2.sessionExpiresAt - result2.serverTime > 120 then
+			return fn3("INVALID_SERVER_RESPONSE", "Invalid response from the license server")
+		end
+
+		if result2.version ~= "Free" and result2.version ~= "NightHub" and result2.version ~= "Noctelis" then
+			return fn3("INVALID_SERVER_RESPONSE", "Invalid response from the license server")
+		end
+
+		if result2.subscriptionTier ~= "Free" and result2.subscriptionTier ~= "Pro" then
+			return fn3("INVALID_SERVER_RESPONSE", "Invalid response from the license server")
+		end
+
+		if result2.expiresAt ~= nil and (not fn5(result2.expiresAt) or result2.expiresAt <= result2.serverTime) then
+			return fn3("KEY_EXPIRED", "This key has expired", true)
+		end
+
+		local v5, v6 = fn7({
+			step = "start",
+			sessionIdentifier = result2.sessionIdentifier,
+			accessToken = result2.accessToken,
+			challenge = result2.challenge,
+			clientNonce = str2,
+			hardwareIdentifier = result,
+		}, 8388608)
+
+		if not v5 then
+			return fn3("VALIDATION_UNAVAILABLE", v6)
+		end
+
+		if v5.StatusCode ~= 200 then
+			return fn3("AUTH_START_FAILED", "Protected authorization failed")
+		end
+		local ok3, result3 = pcall(hash, v5.Body, "sha256")
+		if not ok3 or not fn4(result3, 64) then
+			return fn3("CRYPTO_UNAVAILABLE", "Payload integrity check failed")
+		end
+		local v7 = fn6(v5.Headers, "x-night-hub-session")
+		local v8 = fn6(v5.Headers, "x-night-hub-digest")
+		local v9 = fn6(v5.Headers, "x-night-hub-watermark")
+		local v10 = fn6(v5.Headers, "x-night-hub-proof")
+		if not fn4(v7, 32) or not fn4(v9, 32) or v8 ~= result3 or type(v10) ~= "string" then
+			return fn3("INVALID_SERVER_RESPONSE", "Protected authorization signature is invalid")
+		end
+		local ok4, result4 = pcall(hmac, result2.challenge, table.concat({ v7, result3, v9 }, ":"), "sha256")
+		if not ok4 or v10 ~= result4 then
+			return fn3("INVALID_SERVER_RESPONSE", "Protected authorization signature is invalid")
+		end
+
+		return true, {
+			valid = true,
+			version = result2.version == "Noctelis" and "NightHub" or result2.version,
+			subscriptionTier = result2.subscriptionTier,
+			expiresAt = result2.expiresAt,
+			serverTime = result2.serverTime,
+		}
+	end
+
+	local nightHubAuthRewrite = {
+		Valid = false,
+		Details = nil,
+		Finished = false,
+		Stop = function()
+			v2.destroyInterface()
+		end,
+	}
+
+	v2.validateLicenseKey = validateLicenseKey
+
+	v2.onLicenseKeyAccepted = function(arg, details)
+		if nightHubAuthRewrite.Valid then
+			return
+		end
+		nightHubAuthRewrite.Valid = true
+		nightHubAuthRewrite.Details = details
+		nightHubAuthRewrite.Finished = true
+	end
+
+	v2.onInterfaceClosed = function()
+		nightHubAuthRewrite.Finished = true
+	end
+
+	genv.NightHubAuthRewrite = nightHubAuthRewrite
+	local value = rawget(genv, "Key")
+	v2.showInterface(type(value) == "string" and value or nil)
+	return nightHubAuthRewrite
+end
+
+local v = fn()
+
+if type(v) ~= "table" then
+	return
+end
+
+while not v.Finished do
+	task.wait()
+end
+
+if not v.Valid then
+	return
+end
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+game:GetService("RunService")
+game:GetService("UserInputService")
+local localPlayer = Players.LocalPlayer
+local Remotes = require(ReplicatedStorage.Shared.Remotes)
+require(ReplicatedStorage.Client.EggState)
+local states = require(ReplicatedStorage.Shared.Types.AreaEggs).States
+require(ReplicatedStorage.Shared.Modules.Ragdoll)
+require(ReplicatedStorage.Shared.Util.AreaEggSlotIdentity)
+require(ReplicatedStorage.Shared.Util.AssetItems)
+require(ReplicatedStorage.Shared.Util.AssetEarnings)
+require(ReplicatedStorage:WaitForChild("Data").Assets)
+
+if getgenv() then
+end
+
+local function fn2(...)
+	print("[HitSteal]", ...)
+end
+
+local function fn3(n)pcall(firesignal, Remotes .GuardPatrol.EnabledShifted.OnClientEvent,n and true or false,1/0);end
+local function fn4()local n= localPlayer .Character;return n,n and(n:FindFirstChild("HumanoidRootPart"));end
+error("devirt: value <luasym.LuaFunc object at 0x000001EC55822DD0> in an expression (at 157:1821)")
